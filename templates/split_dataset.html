@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Dataset Split</h3>
+
+<ul class="list-group">
+
+<li class="list-group-item">Total Rows: {{ total_rows }}</li>
+<li class="list-group-item">Training Rows: {{ train_rows }}</li>
+<li class="list-group-item">Testing Rows: {{ test_rows }}</li>
+<li class="list-group-item">Split Ratio: {{ split_ratio }}</li>
+
+</ul>
+
+{% endblock %}

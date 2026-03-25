@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3 class="mb-4">Upload Battery Dataset</h3>
+
+<form method="POST" enctype="multipart/form-data">
+
+<input type="file" name="dataset" class="form-control mb-3">
+
+<button class="btn btn-success">Upload Dataset</button>
+
+</form>
+
+
+{% if message %}
+
+<div class="alert alert-success mt-4">
+
+{{ message }}
+
+</div>
+
+{% endif %}
+
+
+{% if table %}
+
+<h5 class="mt-4">Dataset Preview</h5>
+
+<div class="table-responsive">
+
+{{ table | safe }}
+
+</div>
+
+{% endif %}
+
+{% endblock %}

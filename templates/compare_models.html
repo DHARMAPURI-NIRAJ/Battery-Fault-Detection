@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Model Performance Comparison</h3>
+
+<img src="{{ url_for('static', filename=acc_image) }}" class="img-fluid mb-4">
+
+<img src="{{ url_for('static', filename=pie_image) }}" class="img-fluid mb-4">
+
+<img src="{{ url_for('static', filename=line_image) }}" class="img-fluid">
+
+{% endblock %}

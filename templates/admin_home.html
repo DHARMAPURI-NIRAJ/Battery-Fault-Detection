@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Animation */
+.fade-in {
+    animation: fadeIn 1.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+/* Cards */
+.dashboard-card {
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.dashboard-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Colors */
+.bg1 { background: linear-gradient(135deg, #667eea, #764ba2); }
+.bg2 { background: linear-gradient(135deg, #f7971e, #ffd200); }
+.bg3 { background: linear-gradient(135deg, #43cea2, #185a9d); }
+.bg4 { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
+
+/* Chatbot */
+#chatbot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+#chatbox {
+    display: none;
+    width: 300px;
+    height: 400px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+#chat-header {
+    background: #4CAF50;
+    color: white;
+    padding: 10px;
+}
+
+#chat-body {
+    padding: 10px;
+    height: 300px;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+#chat-input {
+    width: 100%;
+    border: none;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+</style>
+
+<div class="container mt-4 fade-in">
+
+    <h2 class="mb-3">⚡ Admin Dashboard</h2>
+
+    <p class="text-muted">
+        Manage dataset processing, model training, and system users efficiently.
+    </p>
+
+    <div class="row g-4 mt-3">
+
+        <div class="col-md-3">
+            <div class="dashboard-card bg1" onclick="location.href='/upload_dataset'">
+                <h5>📂 Upload Dataset</h5>
+                <p>Upload CSV data</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="dashboard-card bg2" onclick="location.href='/preprocess'">
+                <h5>⚙️ Preprocess</h5>
+                <p>Clean & prepare data</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="dashboard-card bg3" onclick="location.href='/train_models'">
+                <h5>🤖 Train Models</h5>
+                <p>Train ML models</p>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="dashboard-card bg4" onclick="location.href='/manage_users'">
+                <h5>👥 Manage Users</h5>
+                <p>View & control users</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CHATBOT UI -->
+<div id="chatbot">
+    <button class="btn btn-success" onclick="toggleChat()">💬 Chat</button>
+    <div id="chatbox">
+        <div id="chat-header" style="display: flex; align-items: center; gap: 10px;">
+            <img src="https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/robot.svg" alt="Bot" id="bot-avatar" style="width: 36px; height: 36px; animation: robotWave 1.2s infinite alternate;">
+            <span>AI Assistant</span>
+        </div>
+        <div id="chat-body" style="background: #f7f7fa; height: 300px; overflow-y: auto; font-size: 14px; padding: 10px;"></div>
+        <div style="display: flex; border-top: 1px solid #ddd;">
+            <input id="chat-input" placeholder="Type a message..." onkeypress="sendMessage(event)" style="flex:1; border:none; padding:10px;">
+            <button onclick="sendMessage({key:'Enter'})" style="background:#4CAF50; color:white; border:none; padding:0 16px;">Send</button>
+        </div>
+    </div>
+</div>
+
+<style>
+@keyframes robotWave {
+    0% { transform: rotate(-10deg) scale(1.05); }
+    100% { transform: rotate(10deg) scale(1.15); }
+}
+.chat-bubble {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 8px;
+}
+.chat-bubble.bot {
+    justify-content: flex-start;
+}
+.chat-bubble.user {
+    justify-content: flex-end;
+}
+.bubble {
+    max-width: 70%;
+    padding: 8px 14px;
+    border-radius: 18px;
+    margin: 2px 0;
+    font-size: 1em;
+}
+.bubble.bot {
+    background: #e3f0ff;
+    color: #2d7be5;
+    border-bottom-left-radius: 4px;
+}
+.bubble.user {
+    background: #4CAF50;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+</style>
+
+<script>
+function toggleChat() {
+    let box = document.getElementById("chatbox");
+    box.style.display = box.style.display === "block" ? "none" : "block";
+}
+
+function sendMessage(event) {
+    if (event.key === "Enter" || event.key === undefined) {
+        let input = document.getElementById("chat-input");
+        let message = input.value.trim();
+        if (!message) return;
+        let chatBody = document.getElementById("chat-body");
+        chatBody.innerHTML += `<div class="chat-bubble user"><div class="bubble user">${escapeHtml(message)}</div></div>`;
+        chatBody.scrollTop = chatBody.scrollHeight;
+        input.value = "";
+        setTimeout(() => {
+            let reply = getBotReply(message);
+            chatBody.innerHTML += `<div class="chat-bubble bot"><img src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/robot.svg' style='width:28px;height:28px;margin-right:8px;'><div class="bubble bot">${escapeHtml(reply)}</div></div>`;
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }, 500);
+    }
+}
+
+function getBotReply(msg) {
+    msg = msg.toLowerCase();
+    if (msg.includes("upload")) return "Go to <b>Upload Dataset</b> section.";
+    if (msg.includes("train")) return "Use <b>Train Models</b> to build ML models.";
+    if (msg.includes("users")) return "Manage users in <b>Users</b> section.";
+    if (msg.includes("hello") || msg.includes("hi")) return "Hello Admin 👋 How can I help you today?";
+    if (msg.includes("fault")) return "I can help you analyze battery faults and model results.";
+    if (msg.includes("help")) return "Ask me about any dashboard feature or workflow.";
+    return "I am your AI assistant 🤖. Ask about system features or workflow!";
+}
+
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+</script>
+
+{% endblock %}

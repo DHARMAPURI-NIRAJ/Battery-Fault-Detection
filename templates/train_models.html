@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Model Training Results</h3>
+
+<table class="table table-bordered">
+
+<tr>
+<th>Model</th>
+<th>Accuracy (%)</th>
+</tr>
+
+{% for model, acc in accuracies.items() %}
+
+<tr>
+<td>{{ model }}</td>
+<td>{{ acc }}</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+<h5 class="mt-3">Best Model: {{ best_model }}</h5>
+
+{% endblock %}

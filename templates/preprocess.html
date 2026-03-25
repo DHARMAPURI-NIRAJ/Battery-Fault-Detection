@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Dataset Preprocessing</h3>
+
+<ul class="list-group">
+
+<li class="list-group-item">Total Rows Before Cleaning: {{ total_rows_before }}</li>
+<li class="list-group-item">Missing Values Before Cleaning: {{ missing_before }}</li>
+<li class="list-group-item">Duplicate Rows Before Cleaning: {{ duplicates_before }}</li>
+
+<li class="list-group-item">Total Rows After Cleaning: {{ total_rows_after }}</li>
+<li class="list-group-item">Missing Values After Cleaning: {{ missing_after }}</li>
+<li class="list-group-item">Duplicate Rows After Cleaning: {{ duplicates_after }}</li>
+
+</ul>
+
+{% endblock %}

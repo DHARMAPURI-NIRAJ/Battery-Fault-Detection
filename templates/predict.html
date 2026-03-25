@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h3>Battery Fault Prediction</h3>
+
+<form method="POST" action="{{ url_for('predict') }}">
+
+<input type="text" name="voltage_V" class="form-control mb-2" placeholder="Voltage">
+
+<input type="text" name="current_A" class="form-control mb-2" placeholder="Current">
+
+<input type="text" name="temperature_C" class="form-control mb-2" placeholder="Temperature">
+
+<input type="text" name="soc_percent" class="form-control mb-2" placeholder="SOC">
+
+<input type="text" name="soh_percent" class="form-control mb-2" placeholder="SOH">
+
+<input type="text" name="internal_resistance_mOhm" class="form-control mb-2" placeholder="Internal Resistance">
+
+<input type="text" name="charge_cycles" class="form-control mb-2" placeholder="Charge Cycles">
+
+<input type="text" name="ambient_temp_C" class="form-control mb-3" placeholder="Ambient Temperature">
+
+<button class="btn btn-primary">Predict</button>
+
+</form>
+
+{% if prediction %}
+
+<div id="popup-overlay" class="show">
+    <div id="popup-box"
+         class="{{ 'error' if prediction and 'Fault' in prediction else 'success' }}">
+        
+        <h2>⚡ {{ prediction }}</h2>
+        <p>{{ explanation }}</p>
+    </div>
+</div>
+<div class="mt-4">
+    <h5>{{ prediction }}</h5>
+    <p>{{ explanation }}</p>
+</div>
+
+{% endif %}
+
+{% endblock %}
