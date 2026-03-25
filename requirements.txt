@@ -5,3 +5,4 @@ joblib
 requests
 matplotlib
 scikit-learn
+gunicorn
